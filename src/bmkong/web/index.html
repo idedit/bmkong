@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>黑神话：悟空存档编辑 · BMKONG</title>
+<style>
+:root{
+  --ink:#0e0d0b; --ink-2:#171512; --ink-3:#221f1a; --line:#2f2b24; --line-2:#433d33;
+  --txt:#ede6d6; --txt-2:#aaa190; --txt-3:#6f685b;
+  --gold:#d9a441; --gold-2:#8c6420; --red:#c2402f; --jade:#6c9e7c;
+  --serif:"Noto Serif SC","Source Han Serif SC","SimSun",serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ink);color:var(--txt);font:14px/1.5 "Microsoft YaHei UI","Noto Sans SC",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit;color:var(--txt);background:var(--ink);border:1px solid var(--line-2);border-radius:4px;padding:6px 8px;outline:none}
+input:focus{border-color:var(--gold)}
+input[type=number]{width:80px;text-align:center;appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.app{display:grid;grid-template-rows:56px 1fr 40px;grid-template-columns:minmax(0,1fr);height:100vh;min-width:900px}
+.top{display:flex;align-items:center;gap:12px;padding:0 20px;background:var(--ink-2);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.mark{width:34px;height:34px;flex:none}
+.logo b{font-family:var(--serif);font-size:17px;letter-spacing:2px}
+.logo small{color:var(--txt-3)}
+.path{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px 10px;color:var(--txt-2);font-size:12px}
+.path span:last-child{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;direction:rtl;text-align:left}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--txt-3);flex:none}
+.dot.ok{background:var(--jade)}
+.btn{background:transparent;border:1px solid var(--line-2);border-radius:4px;padding:6px 14px;white-space:nowrap}
+.btn:hover{border-color:var(--gold);color:var(--gold)}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#1c1406;font-weight:500}
+.btn.primary:hover{background:#e6b55a;color:#1c1406}
+.btn:disabled,.btn:disabled:hover{opacity:.4;cursor:not-allowed;border-color:var(--line-2);color:inherit}
+.btn.primary:disabled,.btn.primary:disabled:hover{background:var(--gold);border-color:var(--gold);color:#1c1406}
+.btn.danger:hover{border-color:var(--red);color:var(--red)}
+.btn.sm{padding:3px 10px;font-size:12px}
+.body{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:0}
+.side{overflow:auto;background:var(--ink-2);padding:18px 16px;border-right:1px solid var(--line)}
+.main{overflow:auto;padding:22px 26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:18px;align-content:start}
+.h{font-family:var(--serif);color:var(--gold);font-size:13px;letter-spacing:3px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--gold-2),transparent)}
+.info{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px;margin-bottom:18px}
+.info span:nth-child(odd){color:var(--txt-2)}
+.info span:nth-child(even){text-align:right;font-family:var(--serif)}
+.note{border:1px dashed var(--line-2);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--txt-2);line-height:1.6}
+.note b{color:var(--gold);font-weight:500}
+.panel{background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:18px 20px}
+.panel.dirty{border-color:var(--gold-2)}
+.panel.wide{grid-column:1/-1}
+.ph{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+.ph h2{margin:0;font-family:var(--serif);font-weight:500;font-size:18px;letter-spacing:2px}
+.ph .was{color:var(--txt-3);font-size:12px}
+.ph .sp{flex:1}
+.path-id{font:11px Consolas,monospace;color:var(--txt-3)}
+.big{display:flex;align-items:center;gap:10px}
+.big .ico{font-size:26px;width:30px;text-align:center}
+.big input{flex:1;min-width:0;font-family:var(--serif);font-size:30px;text-align:left;padding:4px 10px;width:auto}
+.will{color:var(--gold)}
+.skull{color:var(--red)}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.total{font-family:var(--serif);font-size:30px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.total small{font-family:inherit;font-size:12px;color:var(--txt-3)}
+.ch{display:grid;grid-template-columns:150px 140px 1fr;align-items:center;gap:14px;padding:7px 0;border-top:1px solid var(--line)}
+.ch:first-of-type{border-top:0}
+.ch .n{font-family:var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch.dirty .n{color:var(--gold)}
+.bar{height:8px;background:var(--ink);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#7e2a20,var(--red));border-radius:4px}
+.stepper{display:flex}
+.stepper button{width:30px;height:32px;background:var(--ink-3);border:1px solid var(--line-2)}
+.stepper button:first-child{border-radius:4px 0 0 4px}
+.stepper button:last-child{border-radius:0 4px 4px 0}
+.stepper input{height:32px;border-radius:0;border-left:0;border-right:0;width:72px}
+.time{display:flex;align-items:center;gap:8px;font-size:15px}
+.time input{font-family:var(--serif);font-size:24px;width:110px;padding:4px 8px}
+.hint{color:var(--txt-3);font-size:12px;margin-top:10px}
+.empty{color:var(--txt-3);text-align:center;padding:60px 10px;font-family:var(--serif);letter-spacing:2px;grid-column:1/-1}
+.status{display:flex;align-items:center;gap:18px;padding:0 20px;border-top:1px solid var(--line);background:var(--ink-2);font-size:12px;color:var(--txt-2)}
+.status .chg{color:var(--gold)}
+.sp{flex:1}
+.err{color:#e0656d}
+#game{color:var(--red)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:10}
+.overlay.show{display:flex}
+.modal{background:var(--ink-2);border:1px solid var(--line-2);border-radius:8px;padding:20px;width:480px;max-width:90vw}
+.modal h3{margin:0 0 12px;font-family:var(--serif);font-weight:500;color:var(--gold)}
+.modal p{color:var(--txt-2);font-size:13px;margin:0 0 12px}
+.modal .row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.modal .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.list{max-height:240px;overflow:auto;display:grid;gap:6px}
+.list button{text-align:left;font-size:12px;word-break:break-all}
+.toast{position:fixed;bottom:56px;left:50%;transform:translateX(-50%);background:var(--ink-3);border:1px solid var(--gold-2);color:var(--txt);padding:10px 16px;border-radius:6px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:80vw;z-index:20}
+.toast.show{opacity:1}
+.toast.bad{border-color:var(--red)}
+html[lang=en] .logo b{letter-spacing:.5px}
+html[lang=en] .logo small{display:none}
+.lang{display:flex;border:1px solid var(--line-2);border-radius:4px;overflow:hidden;flex:none}
+.lang button{background:transparent;border:0;padding:5px 9px;color:var(--txt-3);font-size:12px}
+.lang button.on{background:var(--ink-3);color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="logo"><svg class="mark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><rect x="40" y="40" width="944" height="944" rx="200" fill="#0e0d0b"/><polygon points="175,807 807,175 849,217 217,849" fill="#b8322a"/><polygon points="166,798 251,713 311,773 226,858" fill="#d9a441"/><polygon points="713,251 798,166 858,226 773,311" fill="#d9a441"/><polygon points="260,716 268,708 316,756 308,764" fill="#8c6420"/><polygon points="708,268 716,260 764,308 756,316" fill="#8c6420"/><polygon points="813,372 817,381 821,391 825,401 828,411 831,421 834,432 837,442 839,452 840,463 842,473 843,484 844,495 844,505 844,516 844,526 843,537 842,548 841,558 839,569 837,579 835,590 832,600 829,610 826,620 822,630 818,640 814,650 810,659 805,669 800,678 794,687 788,696 782,705 776,713 769,722 763,730 755,738 748,745 741,753 733,760 725,767 716,774 708,780 699,786 690,792 681,798 672,803 663,808 653,812 643,817 634,821 624,825 614,828 604,831 593,834 583,836 573,838 562,840 552,842 541,843 530,843 520,844 509,844 498,844 488,843 477,842 467,841 456,839 446,837 435,835 425,832 415,829 405,826 395,823 385,819 375,815 366,810 356,805 347,800 338,795 329,789 320,783 311,777 303,770 295,763 287,756 279,749 272,741 265,733 258,725 251,717 245,709 238,700 233,691 227,682 222,673 217,664 212,654 208,644 203,635 200,625 196,615 193,604 190,594 188,584 186,573 184,563 182,552 181,542 181,531 180,521 180,510 180,499 181,489 182,478 183,468 185,457 186,447 189,436 191,426 194,416 197,406 201,396 205,386 209,376 214,366 218,357 224,348 229,339 235,330 241,321 247,312 253,304 260,296 267,288 275,280 282,273 290,265 298,258 306,252 315,245 323,239 332,233 341,227 350,222 360,217 369,212 379,208 389,204 398,200 408,197 419,193 429,191 439,188 450,186 460,184 471,183 481,181 492,181 502,180 513,180 524,180 534,181 545,182 555,183 566,184 576,186 587,189 597,191 607,194 617,197 627,201 637,205 647,209 657,213 666,218 675,223 685,228 694,234 702,240 666,292 659,288 651,283 644,279 636,275 629,271 621,267 613,264 605,261 597,258 589,255 581,253 572,251 564,249 555,248 547,246 538,245 530,245 521,244 513,244 504,244 496,244 487,245 479,246 470,247 462,249 453,251 445,253 437,255 428,257 420,260 412,263 404,267 397,270 389,274 381,278 374,282 367,287 360,292 353,297 346,302 339,307 333,313 326,319 320,325 314,331 309,337 303,344 298,351 293,358 288,365 283,372 279,379 275,387 271,395 267,402 264,410 261,418 258,426 255,434 253,443 251,451 249,459 248,468 246,476 245,485 245,493 244,502 244,510 244,519 244,528 245,536 246,545 247,553 249,562 250,570 252,578 255,587 257,595 260,603 263,611 266,619 270,627 274,634 278,642 282,649 286,657 291,664 296,671 301,678 307,684 312,691 318,697 324,703 330,709 337,715 343,720 350,726 357,731 364,735 371,740 379,744 386,749 394,753 402,756 409,760 417,763 425,766 434,768 442,771 450,773 459,775 467,776 475,777 484,779 493,779 501,780 510,780 518,780 527,780 535,779 544,778 552,777 561,776 569,774 578,772 586,770 594,767 602,764 610,761 618,758 626,755 634,751 641,747 649,743 656,738 663,733 670,728 677,723 684,718 690,712 696,706 703,700 709,694 714,688 720,681 725,675 730,668 735,661 740,653 744,646 748,639 752,631 756,623 759,615 762,607 765,599 768,591 770,583 773,575 774,566 776,558 777,549 778,541 779,532 780,524 780,515 780,507 780,498 779,489 778,481 777,472 776,464 774,456 772,447 770,439 767,431 765,423 762,415 758,407 755,399" fill="#d9a441" stroke="#0e0d0b" stroke-width="10"/></svg><b data-i="appName"></b><small>Black Myth: Wukong</small></div>
+    <div class="path"><span class="dot" id="pathDot"></span><span id="pathText" data-i="noSave"></span></div>
+    <button class="btn" onclick="chooseSave()" data-i="open"></button>
+    <button class="btn" onclick="call('open_backups')" data-i="backups"></button>
+    <button class="btn danger" onclick="discardAll()" data-i="discard"></button>
+    <button class="btn primary" id="saveBtn" onclick="saveAll()" disabled data-i="save"></button>
+    <div class="lang" id="lang"><button data-l="zh">中</button><button data-l="en">EN</button></div>
+  </header>
+
+  <div class="body">
+    <aside class="side" id="side"><div class="empty" data-i="openFirst"></div></aside>
+    <main class="main" id="main"></main>
+  </div>
+
+  <footer class="status">
+    <span id="state"></span>
+    <span class="chg" id="chg"></span>
+    <span class="sp"></span>
+    <span id="game"></span>
+  </footer>
+</div>
+
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- i18n ---------- */
+const I18N = {
+  zh: {
+    appName: '黑神话：悟空存档编辑', noSave: '未打开存档', open: '打开存档', backups: '打开备份', discard: '撤销全部', save: '保存修改',
+    openFirst: '打开存档后显示',
+    notLoaded: '● 未加载', loading: '读取中…', openFailed: '● 打开失败', parsed: '● 存档已解析',
+    saving: '保存中…', saveFailed: '● 保存失败，原存档未改动', saved: p => `已保存。原存档已备份到 ${p}`, nothingToSave: '没有需要保存的修改',
+    pending: n => `${n} 处未保存修改`, noChanges: '还没有修改', gameRunning: '● 游戏正在运行，保存前请先退出游戏',
+    confirmSwitch: '有未保存的修改，确定要切换存档吗？', confirmDiscard: '撤销所有未保存的修改？',
+    openTitle: '打开存档', openHint: '选择 ArchiveSaveFile.N.sav（位于 游戏目录\\b1\\Saved\\SaveGames\\&lt;Steam ID&gt;\\），N 是存档位编号。',
+    noneFound: '未自动找到存档。', pastePath: '或粘贴存档完整路径', browse: '浏览…', cancel: '取消', openBtn: '打开',
+    saveInfo: '存档信息', slot: '存档位', level: '等级', savedAt: '保存时间', saveCount: '保存次数', steamId: 'Steam ID',
+    noteTitle: '说明',
+    note: '<b>保存前会自动备份</b>原存档，可用「打开备份」找到。<br>保存时会重新计算游戏读档时校验的 MD5。',
+    badSum: '校验值不匹配', badSumText: '这个存档的 MD5 校验值和内容对不上，游戏会拒绝读取（例如被旧版本编辑器改过）。点下面的按钮只重写校验值，内容不变。', repair: '修复校验值', repaired: p => `已修复。原文件已备份到 ${p}`,
+    will: '灵韵', was: v => `原值 ${v}`, setTo: v => `设为 ${v}`, add: v => `+${v}`, reset: '还原',
+    deaths: '死亡次数', totalDeaths: '累计死亡', totalHint: '累计死亡 = 各章节之和，保存时自动计算', clearAll: '全部清零',
+    playTime: '游戏时长', hours: '小时', minutes: '分', timeHint: '存档里有 4 处时长记录，会按同样的差值一起调整',
+    w: n => n >= 10000 ? `${n / 10000}万` : String(n),
+  },
+  en: {
+    appName: 'Black Myth: Wukong Save Editor', noSave: 'No save opened', open: 'Open save', backups: 'Backups', discard: 'Discard all', save: 'Save',
+    openFirst: 'Open a save to begin',
+    notLoaded: '● Not loaded', loading: 'Loading…', openFailed: '● Could not open the save', parsed: '● Save parsed',
+    saving: 'Saving…', saveFailed: '● Save failed, the original file is unchanged', saved: p => `Saved. The original was backed up to ${p}`, nothingToSave: 'Nothing to save',
+    pending: n => `${n} unsaved change${n === 1 ? '' : 's'}`, noChanges: 'No changes yet', gameRunning: '● The game is running. Quit it before saving',
+    confirmSwitch: 'You have unsaved changes. Switch saves anyway?', confirmDiscard: 'Discard all unsaved changes?',
+    openTitle: 'Open save', openHint: 'Choose ArchiveSaveFile.N.sav (in &lt;game folder&gt;\\b1\\Saved\\SaveGames\\&lt;Steam ID&gt;\\); N is the save slot.',
+    noneFound: 'No save was found automatically.', pastePath: 'Or paste the full path of a save', browse: 'Browse…', cancel: 'Cancel', openBtn: 'Open',
+    saveInfo: 'Save', slot: 'Slot', level: 'Level', savedAt: 'Saved at', saveCount: 'Save count', steamId: 'Steam ID',
+    noteTitle: 'Notes',
+    note: '<b>The original is backed up</b> before every save (see Backups).<br>Saving recomputes the MD5 the game checks on load.',
+    badSum: 'Checksum mismatch', badSumText: 'This save’s MD5 does not match its content, so the game refuses to load it (e.g. after an older version of this editor). The button below rewrites only the checksum.', repair: 'Repair checksum', repaired: p => `Repaired. The original was backed up to ${p}`,
+    will: 'Will', was: v => `was ${v}`, setTo: v => `Set ${v}`, add: v => `+${v}`, reset: 'Reset',
+    deaths: 'Deaths', totalDeaths: 'Total deaths', totalHint: 'The total is the sum of the chapters, recalculated on save', clearAll: 'Clear all',
+    playTime: 'Play time', hours: 'h', minutes: 'min', timeHint: 'The save keeps 4 play time counters; all are shifted by the same amount',
+    w: n => n >= 1000000 ? `${n / 1000000}M` : n >= 1000 ? `${n / 1000}K` : String(n),
+  },
+};
+const sysLang = () => /^zh/i.test(navigator.language || '') ? 'zh' : 'en';
+const t = (key, ...args) => { const v = I18N[S.lang][key] ?? I18N.zh[key]; return typeof v === 'function' ? v(...args) : v; };
+
+const INT_MAX = 2147483647;
+const S = {summary:null, edits:{}, lang:sysLang(), state:['notLoaded']};
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = n => Number(n).toLocaleString(S.lang === 'zh' ? 'zh-CN' : 'en-US');
+let booted = false;
+
+function applyLang(lang, remember){
+  S.lang = lang in I18N ? lang : 'en';
+  document.documentElement.lang = S.lang === 'zh' ? 'zh-CN' : 'en';
+  document.title = `${t('appName')} · BMKONG`;
+  document.querySelectorAll('[data-i]').forEach(el => { if (el.id !== 'pathText' || !S.summary) el.textContent = t(el.dataset.i); });
+  $('lang').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.l === S.lang));
+  if (booted) call('set_lang', S.lang, !!remember).catch(() => {});
+  renderState(); renderAll(); renderGame();
+}
+$('lang').onclick = e => { const l = e.target.dataset.l; if (l && l !== S.lang) applyLang(l, true); };
+
+async function call(method, ...args){
+  let r;
+  if (window.pywebview) r = await window.pywebview.api[method](...args);
+  else r = await (await fetch('/api/' + method, {method:'POST', body: JSON.stringify(args)})).json();
+  if (!r.ok) { toast(r.error, true); throw new Error(r.error); }
+  return r.data;
+}
+function toast(msg, bad){
+  const el = $('toast'); el.textContent = msg; el.className = 'toast show' + (bad ? ' bad' : '');
+  clearTimeout(el._h); el._h = setTimeout(() => el.className = 'toast', bad ? 6000 : 3500);
+}
+function setState(...key){ S.state = key; renderState(); }
+function renderState(){
+  const [key, ...args] = S.state, text = esc(t(key, ...args));
+  $('state').innerHTML = key === 'parsed' ? `<span style="color:var(--jade)">${text}</span>`
+    : key === 'openFailed' || key === 'saveFailed' ? `<span class="err">${text}</span>` : text;
+}
+
+/* ---------- edits: {will, chapters: {id: n}, play_time} hold only values that differ from the save ---------- */
+const will = () => S.edits.will ?? S.summary.will;
+const chDeaths = c => S.edits.chapters?.[c.id] ?? c.deaths;
+const playTime = () => S.edits.play_time ?? Math.round(S.summary.play_time);
+const totalDeaths = () => S.summary.chapters.reduce((a, c) => a + chDeaths(c), 0);
+function setEdit(key, value, base){
+  if (value === base) delete S.edits[key]; else S.edits[key] = value;
+  refresh();
+}
+function setChapter(c, n){
+  n = Math.min(INT_MAX, Math.max(0, Math.round(n) || 0));
+  const e = S.edits.chapters ||= {};
+  if (n === c.deaths) delete e[c.id]; else e[c.id] = n;
+  if (!Object.keys(e).length) delete S.edits.chapters;
+  refresh();
+}
+function dirtyCount(){
+  return ('will' in S.edits) + ('play_time' in S.edits) + Object.keys(S.edits.chapters || {}).length;
+}
+
+/* ---------- loading ---------- */
+async function boot(){
+  if (booted) return; booted = true;
+  let c;
+  try { c = await call('candidates'); } catch (e) { booted = false; return; }
+  applyLang(c.lang || sysLang(), false);
+  pollGame();
+  if (c.last) return load(c.last);
+  if (c.saves.length === 1) return load(c.saves[0]);
+  chooseSave(c.saves);
+}
+async function chooseSave(list){
+  if (dirtyCount() && !confirm(t('confirmSwitch'))) return;
+  if (!list) list = (await call('candidates')).saves;
+  modal(`<h3>${t('openTitle')}</h3>
+    <p>${t('openHint')}</p>
+    <div class="list">${list.map(p => `<button class="btn" data-p="${esc(p)}">${esc(p)}</button>`).join('') || `<p>${t('noneFound')}</p>`}</div>
+    <div class="row" style="margin-top:12px"><input id="manualPath" style="flex:1" placeholder="${esc(t('pastePath'))}"></div>
+    <div class="acts">${window.pywebview ? `<button class="btn" id="browse">${t('browse')}</button>` : ''}<button class="btn" onclick="closeModal()">${t('cancel')}</button><button class="btn primary" id="openManual">${t('openBtn')}</button></div>`);
+  $('modal').querySelectorAll('[data-p]').forEach(b => b.onclick = () => { closeModal(); load(b.dataset.p); });
+  $('openManual').onclick = () => { const p = $('manualPath').value.trim().replace(/^"|"$/g, ''); if (p) { closeModal(); load(p); } };
+  if ($('browse')) $('browse').onclick = async () => { const p = await call('browse'); if (p) { closeModal(); load(p); } };
+}
+async function load(path){
+  setState('loading');
+  try { applySummary(await call('open', path)); }
+  catch (e) { setState('openFailed'); }
+}
+function applySummary(sum){
+  S.summary = sum; S.edits = {};
+  $('pathText').textContent = sum.path; $('pathText').title = sum.path; $('pathDot').className = 'dot ok';
+  setState('parsed');
+  renderAll();
+}
+
+/* ---------- rendering ---------- */
+function renderAll(){ renderSide(); renderMain(); renderStatus(); }
+function refresh(){ renderMain(); renderStatus(); }
+
+function renderSide(){
+  if (!S.summary) return;
+  const s = S.summary;
+  $('side').innerHTML = `
+    <div class="h">${t('saveInfo')}</div>
+    <div class="info">
+      <span>${t('slot')}</span><span>${esc(s.slot)}</span>
+      <span>${t('level')}</span><span>${s.level ?? '—'}</span>
+      <span>${t('savedAt')}</span><span>${esc(s.saved_at || '—')}</span>
+      <span>${t('saveCount')}</span><span>${s.save_count ?? '—'}</span>
+      <span>${t('steamId')}</span><span style="font-family:Consolas,monospace;font-size:12px">${esc(s.steam_id || '—')}</span>
+    </div>
+    ${s.checksum_ok ? '' : `<div class="h" style="color:var(--red)">${t('badSum')}</div>
+    <div class="note" style="border-color:var(--red);margin-bottom:18px">${t('badSumText')}<div class="quick"><button class="btn sm primary" id="repair">${t('repair')}</button></div></div>`}
+    <div class="h">${t('noteTitle')}</div>
+    <div class="note">${t('note')}</div>`;
+  if ($('repair')) $('repair').onclick = repair;
+}
+
+function renderMain(){
+  if (!S.summary) { $('main').innerHTML = `<div class="empty">${t('openFirst')}</div>`; return; }
+  const s = S.summary, maxCh = Math.max(1, ...s.chapters.map(chDeaths));
+  const h = Math.floor(playTime() / 3600), m = Math.floor(playTime() % 3600 / 60);
+  $('main').innerHTML = `
+    <section class="panel ${'will' in S.edits ? 'dirty' : ''}">
+      <div class="ph"><h2>${t('will')}</h2>${'will' in S.edits ? `<span class="was">${t('was', fmt(s.will))}</span>` : ''}<span class="sp"></span><span class="path-id">1.1.2.1{1:1}.2</span></div>
+      <div class="big"><span class="ico will">◈</span><input type="number" min="0" id="will" value="${will()}"></div>
+      <div class="quick">
+        ${[10000, 100000, 1000000].map(v => `<button class="btn sm" data-add="${v}">${t('add', t('w', v))}</button>`).join('')}
+        <button class="btn sm" data-set="9999999">${t('setTo', fmt(9999999))}</button>
+        <button class="btn sm" id="willReset" ${'will' in S.edits ? '' : 'disabled'}>${t('reset')}</button>
+      </div>
+    </section>
+
+    <section class="panel ${'play_time' in S.edits ? 'dirty' : ''}">
+      <div class="ph"><h2>${t('playTime')}</h2>${'play_time' in S.edits ? `<span class="was">${t('was', fmtTime(s.play_time))}</span>` : ''}<span class="sp"></span><span class="path-id">1.2.1.1.2 · 6.2.2.1</span></div>
+      ${s.has_time ? `<div class="time"><input type="number" min="0" id="ptH" value="${h}"> ${t('hours')} <input type="number" min="0" max="59" id="ptM" value="${m}"> ${t('minutes')}</div>
+      <div class="quick"><button class="btn sm" id="timeReset" ${'play_time' in S.edits ? '' : 'disabled'}>${t('reset')}</button></div>
+      <div class="hint">${t('timeHint')}</div>` : '<div class="hint">—</div>'}
+    </section>
+
+    <section class="panel wide ${S.edits.chapters ? 'dirty' : ''}">
+      <div class="ph"><h2>${t('deaths')}</h2><span class="sp"></span><span class="path-id">6.1.5</span></div>
+      <div class="total"><span class="skull">☠</span>${fmt(totalDeaths())}${S.edits.chapters ? `<small>${t('was', fmt(s.deaths))}</small>` : ''}</div>
+      <div class="hint" style="margin:0 0 12px">${t('totalHint')}</div>
+      ${s.chapters.map(c => `
+        <div class="ch ${S.edits.chapters && c.id in S.edits.chapters ? 'dirty' : ''}">
+          <span class="n" title="${esc(c[S.lang])}">${esc(c[S.lang])}</span>
+          <div class="stepper"><button data-step="${c.id}:-1">−</button><input type="number" min="0" id="ch${c.id}" data-ch="${c.id}" value="${chDeaths(c)}"><button data-step="${c.id}:1">+</button></div>
+          <div class="bar"><i style="width:${chDeaths(c) / maxCh * 100}%"></i></div>
+        </div>`).join('')}
+      <div class="quick"><button class="btn sm danger" id="clearDeaths">${t('clearAll')}</button></div>
+    </section>`;
+
+  const int = v => Math.min(INT_MAX, Math.max(0, Math.round(+v) || 0));
+  $('will').onchange = e => setEdit('will', int(e.target.value), s.will);
+  $('main').querySelectorAll('[data-add]').forEach(b => b.onclick = () => setEdit('will', int(will() + +b.dataset.add), s.will));
+  $('main').querySelectorAll('[data-set]').forEach(b => b.onclick = () => setEdit('will', int(b.dataset.set), s.will));
+  $('willReset').onclick = () => setEdit('will', s.will, s.will);
+  const byId = id => s.chapters.find(c => c.id === +id);
+  $('main').querySelectorAll('[data-ch]').forEach(el => el.onchange = () => setChapter(byId(el.dataset.ch), +el.value));
+  $('main').querySelectorAll('[data-step]').forEach(b => b.onclick = () => {
+    const [id, d] = b.dataset.step.split(':'), c = byId(id); setChapter(c, chDeaths(c) + +d);
+  });
+  $('clearDeaths').onclick = () => s.chapters.forEach(c => setChapter(c, 0));
+  if (s.has_time) {
+    const time = () => {
+      const secs = int($('ptH').value) * 3600 + Math.min(59, int($('ptM').value)) * 60 + playTime() % 60;
+      setEdit('play_time', secs, Math.round(s.play_time));
+    };
+    $('ptH').onchange = time; $('ptM').onchange = time;
+    $('timeReset').onclick = () => setEdit('play_time', Math.round(s.play_time), Math.round(s.play_time));
+  }
+}
+const fmtTime = secs => `${Math.floor(secs / 3600)}${t('hours')} ${Math.floor(secs % 3600 / 60)}${t('minutes')}`;
+
+function renderStatus(){
+  const n = S.summary ? dirtyCount() : 0; $('chg').textContent = n ? t('pending', n) : '';
+  $('saveBtn').disabled = !n; $('saveBtn').title = n ? '' : t('noChanges');
+}
+
+/* ---------- save ---------- */
+async function saveAll(){
+  if (!S.summary) return;
+  if (!dirtyCount()) return toast(t('nothingToSave'));
+  setState('saving');
+  try {
+    const r = await call('write', S.edits);
+    applySummary(r.summary);
+    toast(t('saved', r.backup));
+  } catch (e) { setState('saveFailed'); }
+}
+async function repair(){
+  if (dirtyCount()) return saveAll();  // a normal save also writes a correct checksum
+  setState('saving');
+  try {
+    const r = await call('write', {});
+    applySummary(r.summary);
+    toast(t('repaired', r.backup));
+  } catch (e) { setState('saveFailed'); }
+}
+function discardAll(){
+  if (!dirtyCount()) return;
+  if (confirm(t('confirmDiscard'))) { S.edits = {}; refresh(); }
+}
+
+function modal(html){ $('modal').innerHTML = html; $('overlay').classList.add('show'); }
+function closeModal(){ $('overlay').classList.remove('show'); }
+$('overlay').onclick = e => { if (e.target.id === 'overlay') closeModal(); };
+
+let gameRunning = false;
+function renderGame(){ $('game').textContent = gameRunning ? t('gameRunning') : ''; }
+async function pollGame(){
+  if (!booted) return;
+  try { gameRunning = (await call('status')).running; } catch (e) {}
+  renderGame();
+}
+setInterval(pollGame, 4000);
+
+window.addEventListener('beforeunload', e => { if (S.summary && dirtyCount()) { e.preventDefault(); e.returnValue = ''; } });
+
+applyLang(S.lang, false);
+// pywebview fires pywebviewready once its API is injected; the dev server (http) needs no bridge
+if (window.pywebview?.api?.candidates || location.protocol.startsWith('http')) boot();
+window.addEventListener('pywebviewready', boot);
+</script>
+</body>
+</html>
